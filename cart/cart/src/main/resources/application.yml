@@ -1,0 +1,28 @@
+server:
+  port: 8092
+  
+spring:
+  application:
+    name: book-cart-service
+    
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: book-cart-db
+      
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - hystrix.stream
+
+logging:
+  level:
+    '[com.user.service.UserServiceImpl]' : info       
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+  file:
+    path: logs 

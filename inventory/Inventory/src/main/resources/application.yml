@@ -1,0 +1,28 @@
+server:
+  port: 8094
+  
+spring:
+  application:
+    name: book-inventory-service
+    
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: book-inventory-db
+      
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - hystrix.stream
+
+logging:
+  level:
+    '[com.user.service.UserServiceImpl]' : info       
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+
+  file:
+    path: logs 

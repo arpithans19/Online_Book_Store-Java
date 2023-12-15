@@ -11,12 +11,14 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Service;
 
 import com.catalog.entity.Book;
 import com.catalog.entity.DBSequence;
 import com.catalog.exception.BookNotFoundException;
 import com.catalog.repository.BookRepository;
 
+@Service
 public class BookServiceImpl implements BookService {
 
 	@Autowired
@@ -64,16 +66,12 @@ public class BookServiceImpl implements BookService {
 
 	}
 
-//	List<Flight> flights= flightRepository.searchByLocation(fromLocation, destination, date);
-//	if(flights.isEmpty()) {
-//		throw new FlightNotFoundException("Flights Not available");
-//	}
-//	return flights ;
+
 	@Override
 	public Book searchBook(String bookTitle) {
 		Optional<Book> books=bookRepository.findBookByTitle(bookTitle);
 		if (books.isEmpty()) {
-			throw new BookNotFoundException("Book not found wixth this id:");
+			throw new BookNotFoundException("Book not found wixth this title:"+bookTitle);
 
 		}
 		return books.get();
