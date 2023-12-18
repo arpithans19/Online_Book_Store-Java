@@ -14,7 +14,7 @@ public class Book {
 	private int bookId;
 	private String title;
 	private String author;
-	private Long ISBN;
+	private String ISBN;
 	private double price;
 	private String availabality;
 	
@@ -37,10 +37,11 @@ public class Book {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	public Long getISBN() {
+	
+	public String getISBN() {
 		return ISBN;
 	}
-	public void setISBN(Long iSBN) {
+	public void setISBN(String iSBN) {
 		ISBN = iSBN;
 	}
 	public double getPrice() {

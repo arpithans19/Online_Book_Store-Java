@@ -5,6 +5,7 @@ import static org.springframework.data.mongodb.core.FindAndModifyOptions.options
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -40,17 +41,31 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public Book saveBook(Book book) {
-		book.setBookId(getSequenceNumber(Book.SEQUENCE_NAME));
-		return bookRepository.save(book);
+	public String generateRandomIsbn() {
+		// Generate a random 13-digit ISBN (excluding checksum)
+		
+		Random random = new Random();
+		StringBuilder isbnBuilder = new StringBuilder("978-0-");
+
+		for (int i = 0; i < 10; i++) {
+			isbnBuilder.append(random.nextInt(10));
+		}
+
+		return isbnBuilder.toString();
 	}
 
+	@Override
+	public Book saveBook(Book book) {
+		book.setBookId(getSequenceNumber(Book.SEQUENCE_NAME));
+		book.setISBN(generateRandomIsbn());
+		return bookRepository.save(book);
+	}
 
 	@Override
 	public Book getBookById(int bookId) {
 		Optional<Book> optionalBook = bookRepository.findById(bookId);
 
-		if(optionalBook.isEmpty())
+		if (optionalBook.isEmpty())
 			throw new BookNotFoundException("Book not found wixth this id: " + bookId);
 		return optionalBook.get();
 	}
@@ -66,37 +81,34 @@ public class BookServiceImpl implements BookService {
 
 	}
 
-
-	@Override
-	public Book searchBook(String bookTitle) {
-		Optional<Book> books=bookRepository.findBookByTitle(bookTitle);
-		if (books.isEmpty()) {
-			throw new BookNotFoundException("Book not found wixth this title:"+bookTitle);
-
-		}
-		return books.get();
-	}
-
 	@Override
 	public Book modifyBookDetails(Book book) {
-		Optional<Book> optionalBook=bookRepository.findById(book.getBookId());
+		Optional<Book> optionalBook = bookRepository.findById(book.getBookId());
 		if (optionalBook.isEmpty()) {
-			throw new BookNotFoundException("Book not found wixth this id"+(book.getBookId()));
+			throw new BookNotFoundException("Book not found wixth this id" + (book.getBookId()));
 
 		}
 		return bookRepository.save(book);
-		
+
 	}
 
-
-	
 	@Override
 	public List<Book> getAllBooks() {
-		List<Book> books=bookRepository.findAll();
-		if(books.isEmpty()) {
+		List<Book> books = bookRepository.findAll();
+		if (books.isEmpty()) {
 			throw new BookNotFoundException("Noo books present");
 		}
 		return books;
+	}
+
+	@Override
+	public List<Book> searchBooksByTitle(String title) {
+		return bookRepository.findByTitle(title); // Update method call
+	}
+
+	@Override
+	public List<Book> searchBooksByAuthor(String author) {
+		return bookRepository.findByAuthor(author);
 	}
 
 }

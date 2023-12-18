@@ -1,12 +1,13 @@
 package com.catalog.controller;
 
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import com.catalog.service.BookService;
 
 @RestController
 @RequestMapping("/catalog")
+@CrossOrigin(origins = "http://localhost:3000")
 
 public class BookController {
 
@@ -36,11 +38,12 @@ public class BookController {
 
 	@PostMapping("/addBook")
 	public ResponseEntity<Book> addBook(@Validated @RequestBody Book book) {
+		
 		Book newBook = bookService.saveBook(book);
 		ResponseEntity<Book> responseEntity = new ResponseEntity<>(newBook, HttpStatus.OK);
 		return responseEntity;
 	}
-
+	 
 	@DeleteMapping("/delete/{bookId}")
 	public ResponseEntity<String> removeBook(@PathVariable("bookId") int bookId) {
 		bookService.deleteBookById(bookId);
@@ -48,8 +51,9 @@ public class BookController {
 		return responseEntity;
 
 	}
+	
 
-	@GetMapping("/get/bookId")
+	@GetMapping("/get/{bookId}")
 	public ResponseEntity<Object> getBookById(@PathVariable("bookId") int bookId) {
 		ResponseEntity<Object> responseEntity = null;
 		Book book = bookService.getBookById(bookId);
@@ -58,6 +62,7 @@ public class BookController {
 
 	}
 
+
 	@PutMapping("/update")
 	public ResponseEntity<Book> updateBookDetails(@RequestBody Book book) {
 		Book updateBook = bookService.modifyBookDetails(book);
@@ -65,5 +70,15 @@ public class BookController {
 		return responseEntity;
 
 	}
+	
+	@GetMapping("/search/title/{title}") 
+    public List<Book> searchBooksByTitle(@PathVariable String title) {
+        return bookService.searchBooksByTitle(title); // Update method call
+    }
+
+    @GetMapping("/search/author/{author}")
+    public List<Book> searchBooksByAuthor(@PathVariable String author) {
+        return bookService.searchBooksByAuthor(author);
+    }
 
 }

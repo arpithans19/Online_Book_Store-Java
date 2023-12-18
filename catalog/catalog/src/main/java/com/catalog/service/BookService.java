@@ -2,10 +2,7 @@ package com.catalog.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
-import com.catalog.entity.*;
-
+import com.catalog.entity.Book;
 
 public interface BookService {
 
@@ -15,13 +12,16 @@ public interface BookService {
 
 	void deleteBookById(int bookId);
 
-	Book searchBook(String bookTitle);
-
 	Book modifyBookDetails(Book book);
 
 	int getSequenceNumber(String sequenceName);
 
 	List<Book> getAllBooks();
+	
+	String generateRandomIsbn();
 
+	List<Book> searchBooksByTitle(String title);
+
+	List<Book> searchBooksByAuthor(String author);
 
 }
